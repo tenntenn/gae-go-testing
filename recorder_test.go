@@ -34,6 +34,9 @@ func TestHandler(t *testing.T) {
     contextCreator = recorder.Creator()
     sampleHandler(w, r)
     defer recorder.Context().Close()
+    defer func(){
+        contextCreator = appengine.NewContext
+    }()
 
     body := w.Body.Bytes()
     if !bytes.Equal(body, []byte("OK")) {
