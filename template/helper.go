@@ -45,6 +45,16 @@ func (p *fakeProto) String() string {
 func (*fakeProto) ProtoMessage() {
 }
 
+func (p *fakeProto) Marshal() ([]byte, error) {
+        return p.data, nil
+}
+
+func (p *fakeProto) Unmarshal(data []byte) error {
+        p.data = make([]byte, len(data))
+        copy(p.data, data)
+        return nil
+}
+
 func call(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 	body, err := ioutil.ReadAll(r.Body)
