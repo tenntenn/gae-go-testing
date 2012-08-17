@@ -41,7 +41,7 @@ func TestContext(t *testing.T) {
 	}
 
 	e := &Entity{Foo: "foo", Bar: "bar"}
-	k := datastore.NewKey(c, "Entity", "stringKey", 0, nil)
+	k := datastore.NewKey(c, "Entity", "stringKey", 1, nil)
 	_, err = datastore.Put(c, k, e)
 	if err != nil {
 		t.Fatalf("datastore.Put: %v", err)
