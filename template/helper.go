@@ -1,5 +1,5 @@
-package appenginetesting;
-var helperSource = `package helper
+{{define "helper.go"}}
+package helper
 
 import (
 	"fmt"
@@ -69,4 +69,4 @@ func call(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Length", fmt.Sprintf("%d", len(out.data)))
 	w.Write(out.data)
 }
-`;
+{{end}}

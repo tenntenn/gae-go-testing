@@ -21,6 +21,7 @@ import (
 	"syscall"
 	"time"
     "testing"
+    "text/template"
 
 	"code.google.com/p/goprotobuf/proto"
 
@@ -37,6 +38,8 @@ var _ appengine.Context = (*Context)(nil)
 // posts and such.  (but this is one of the rare valid uses of not
 // using urlfetch)
 var httpClient = &http.Client{}
+
+var templates = template.Must(template.ParseGlob("template/*"))
 
 // Context implements appengine.Context by running a dev_appserver.py
 // process as a child and proxying all Context calls to the child.
@@ -190,20 +193,21 @@ func (c *Context) startChild() error {
 		if err != nil {
 			return err
 		}
-		appYAML := fmt.Sprintf(`application: %s
-version: 1
-runtime: go
-api_version: go1
 
-handlers:
-- url: /.*
-  script: _go_app
-`, c.appid)
-		err = ioutil.WriteFile(filepath.Join(c.appDir, "app.yaml"), []byte(appYAML), 0755)
+        appYAMLBuf := new(bytes.Buffer)
+        templates.ExecuteTemplate(appYAMLBuf, "app.yaml", struct {
+            AppId string
+        }{
+            c.appid,
+        })
+		err = ioutil.WriteFile(filepath.Join(c.appDir, "app.yaml"), appYAMLBuf.Bytes(), 0755)
 		if err != nil {
 			return err
 		}
-		err = ioutil.WriteFile(filepath.Join(c.appDir, "helper", "helper.go"), []byte(helperSource), 0644)
+
+        helperBuf := new(bytes.Buffer)
+        templates.ExecuteTemplate(helperBuf, "helper.go", nil)
+		err = ioutil.WriteFile(filepath.Join(c.appDir, "helper", "helper.go"), helperBuf.Bytes(), 0644)
 		if err != nil {
 			return err
 		}
