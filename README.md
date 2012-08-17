@@ -14,6 +14,11 @@ And copy appengine, appengine_internal and goprotobuf as followings :
     $cp -r $GAEROOT/goroot/src/pkg/appengine_internal $GOROOT/src/pkg/
     $cp -r $GAEROOT/goroot/src/pkg/code.google.com/p/goprotobuf $GOROOT/src/pkg/code.google.com/p/
 
+In addition set environment variables :
+
+    export PATH=$PATH:$GAEROOT 
+    export APPENGINE_SDK=$GAEROT
+
 This library can be installed as following :
 
     $go get github.com/tenntenn/gae-go-testing
