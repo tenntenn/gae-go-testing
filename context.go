@@ -22,7 +22,6 @@ import (
 	"strings"
 	"syscall"
 	"time"
-    "text/template"
 
 	"code.google.com/p/goprotobuf/proto"
 
@@ -39,8 +38,6 @@ var _ appengine.Context = (*Context)(nil)
 // posts and such.  (but this is one of the rare valid uses of not
 // using urlfetch)
 var httpClient = &http.Client{}
-
-var templates = template.Must(template.ParseGlob("template/*"))
 
 // Context implements appengine.Context by running a dev_appserver.py
 // process as a child and proxying all Context calls to the child.
@@ -182,7 +179,7 @@ func (c *Context) startChild() error {
 	}
 
     appYAMLBuf := new(bytes.Buffer)
-    templates.ExecuteTemplate(appYAMLBuf, "app.yaml", struct {
+    appYAMLTempl.Execute(appYAMLBuf, struct {
         AppId string
     }{
         c.appid,
@@ -193,7 +190,7 @@ func (c *Context) startChild() error {
 	}
 
     helperBuf := new(bytes.Buffer)
-    templates.ExecuteTemplate(helperBuf, "helper.go", nil)
+    helperTempl.Execute(helperBuf, nil)
 	err = ioutil.WriteFile(filepath.Join(c.appDir, "helper", "helper.go"), helperBuf.Bytes(), 0644)
 	if err != nil {
 		return err

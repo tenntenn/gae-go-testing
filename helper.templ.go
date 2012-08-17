@@ -1,4 +1,10 @@
-{{define "helper.go"}}
+package appenginetesting
+
+import (
+    "text/template"
+)
+
+const helperTemplString = `
 package helper
 
 import (
@@ -76,4 +82,7 @@ func call(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Length", fmt.Sprintf("%d", len(out.data)))
 	w.Write(out.data)
 }
-{{end}}
+`
+
+
+var helperTempl = template.Must(template.New("helper.go").Parse(helperTemplString))
