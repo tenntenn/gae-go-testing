@@ -176,41 +176,37 @@ func findDevAppserver() (string, error) {
 }
 
 func (c *Context) startChild() error {
+
 	port, err := findFreePort()
 	if err != nil {
 		return err
 	}
 
-	if os.Getenv("GAE_TEST_USE_APPDIR") != "" {
-		// Development mode.
-		c.appDir = "app"
-	} else {
-		c.appDir, err = ioutil.TempDir("", "")
-		if err != nil {
-			return err
-		}
-		err = os.Mkdir(filepath.Join(c.appDir, "helper"), 0755)
-		if err != nil {
-			return err
-		}
+	c.appDir, err = ioutil.TempDir("", "")
+	if err != nil {
+		return err
+	}
+	err = os.Mkdir(filepath.Join(c.appDir, "helper"), 0755)
+	if err != nil {
+		return err
+	}
 
-        appYAMLBuf := new(bytes.Buffer)
-        templates.ExecuteTemplate(appYAMLBuf, "app.yaml", struct {
-            AppId string
-        }{
-            c.appid,
-        })
-		err = ioutil.WriteFile(filepath.Join(c.appDir, "app.yaml"), appYAMLBuf.Bytes(), 0755)
-		if err != nil {
-			return err
-		}
+    appYAMLBuf := new(bytes.Buffer)
+    templates.ExecuteTemplate(appYAMLBuf, "app.yaml", struct {
+        AppId string
+    }{
+        c.appid,
+    })
+	err = ioutil.WriteFile(filepath.Join(c.appDir, "app.yaml"), appYAMLBuf.Bytes(), 0755)
+	if err != nil {
+		return err
+	}
 
-        helperBuf := new(bytes.Buffer)
-        templates.ExecuteTemplate(helperBuf, "helper.go", nil)
-		err = ioutil.WriteFile(filepath.Join(c.appDir, "helper", "helper.go"), helperBuf.Bytes(), 0644)
-		if err != nil {
-			return err
-		}
+    helperBuf := new(bytes.Buffer)
+    templates.ExecuteTemplate(helperBuf, "helper.go", nil)
+	err = ioutil.WriteFile(filepath.Join(c.appDir, "helper", "helper.go"), helperBuf.Bytes(), 0644)
+	if err != nil {
+		return err
 	}
 
 	devAppserver, err := findDevAppserver()
@@ -249,7 +245,7 @@ func (c *Context) startChild() error {
 			line := string(bs)
 			if done {
 				// Uncomment for extra debugging, to see what the child is logging.
-				// log.Printf("child: %q", line)
+				log.Printf("child: %q", line)
 				continue
 			}
 			if strings.Contains(line, "Running application") {

@@ -30,22 +30,19 @@ func info(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-type fakeSrcProto struct {
-	in []byte
-}
-
-func (p *fakeSrcProto) Marshal() ([]byte, error) {
-	return p.in, nil
-}
-
-type fakeDestProto struct {
+type fakeProto struct {
 	data []byte
 }
 
-func (p *fakeDestProto) Unmarshal(data []byte) error {
-	p.data = make([]byte, len(data))
-	copy(p.data, data)
-	return nil
+func (p *fakeProto) Reset() {
+    *p = fakeProto{}
+}
+
+func (p *fakeProto) String() string {
+    return string(p.data)
+}
+
+func (*fakeProto) ProtoMessage() {
 }
 
 func call(w http.ResponseWriter, r *http.Request) {
@@ -57,8 +54,8 @@ func call(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "failed to read body", 500)
 		return
 	}
-	in := &fakeSrcProto{body}
-	out := &fakeDestProto{}
+	in := &fakeProto{body}
+	out := &fakeProto{}
 	err = c.Call(service, method, in, out, nil)
 	log.Printf("API call %q.%q = %v", service, method, err)
 	if err != nil {
