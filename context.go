@@ -22,7 +22,6 @@ import (
 	"strings"
 	"syscall"
 	"time"
-    "testing"
     "text/template"
 
 	"code.google.com/p/goprotobuf/proto"
@@ -49,7 +48,6 @@ var templates = template.Must(template.ParseGlob("template/*"))
 type Context struct {
 	appid  string
 	req    *http.Request
-    t      *testing.T
 	child  *exec.Cmd
 	port   int    // of child dev_appserver.py http server
 	appDir string // temp dir for application files
@@ -60,11 +58,7 @@ func (c *Context) AppID() string {
 }
 
 func (c *Context) logf(level, format string, args ...interface{}) {
-    if c.T() == nil {
-	    log.Printf(level+": "+format, args...)
-    } else {
-       c.T().Logf(level+": "+format, args...)
-    }
+	log.Printf(level+": "+format, args...)
 }
 
 func (c *Context) Debugf(format string, args ...interface{})    { c.logf("DEBUG", format, args...) }
@@ -121,16 +115,10 @@ func (c *Context) Close() {
 	c.child = nil
 }
 
-func (c *Context) T() *testing.T {
-    return c.t
-}
-
 // Options control optional behavior for NewContext.
 type Options struct {
 	// AppId to pretend to be. By default, "testapp"
 	AppId string
-    // Testting
-    T *testing.T
 }
 
 func (o *Options) appId() string {
@@ -247,7 +235,7 @@ func (c *Context) startChild() error {
 			line := string(bs)
 			if done {
 				// Uncomment for extra debugging, to see what the child is logging.
-				log.Printf("child: %q", line)
+				//log.Printf("child: %q", line)
 				continue
 			}
 			if strings.Contains(line, "Running application") {
@@ -278,7 +266,6 @@ func NewContext(opts *Options) (*Context, error) {
 	c := &Context{
 		appid: opts.appId(),
 		req:   req,
-        t: opts.T, 
 	}
 	if err := c.startChild(); err != nil {
 		return nil, err

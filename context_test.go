@@ -13,8 +13,7 @@ type Entity struct {
 }
 
 func TestContext(t *testing.T) {
-    opts := &Options{"", t}
-	c, err := NewContext(opts)
+	c, err := NewContext(nil)
 	if err != nil {
 		t.Fatalf("NewContext: %v", err)
 	}
