@@ -2,6 +2,8 @@
 // Use of this source code is governed by the Apache 2.0
 // license that can be found in the LICENSE file.
 
+// This file changed by Takuya Ueda from http://code.google.com/p/gae-go-testing/.
+
 // Package appenginetesting provides an appengine.Context for testing.
 package appenginetesting
 
