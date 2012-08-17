@@ -27,4 +27,4 @@ This library can be installed as following :
 Usage
 -----
 
-context_test.go shows an example of usage.
+context_test.go and recorder_test.go show an example of usage.
