@@ -39,6 +39,14 @@ var _ appengine.Context = (*Context)(nil)
 // using urlfetch)
 var httpClient = &http.Client{}
 
+
+// Default API Version
+const DefaultAPIVersion = "go1"
+
+// API version of golang.
+// It is used for app.yaml of dev_server setting.
+var APIVersion = DefaultAPIVersion
+
 // Context implements appengine.Context by running a dev_appserver.py
 // process as a child and proxying all Context calls to the child.
 // Use NewContext to create one.
@@ -181,8 +189,10 @@ func (c *Context) startChild() error {
     appYAMLBuf := new(bytes.Buffer)
     appYAMLTempl.Execute(appYAMLBuf, struct {
         AppId string
+        APIVersion string
     }{
         c.appid,
+        APIVersion,
     })
 	err = ioutil.WriteFile(filepath.Join(c.appDir, "app.yaml"), appYAMLBuf.Bytes(), 0755)
 	if err != nil {
