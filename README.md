@@ -7,17 +7,15 @@ This library is fixed for go1 based on http://code.google.com/p/gae-go-testing/ 
 Installation
 -----
 
+Set environment variables :
+
+    export APPENGINE_SDK=/usr/local/google_appengine
+    export PATH=$PATH:$APPENGINE_SDK
+
 Before installing this library, you have to install [appengine SDK](https://developers.google.com/appengine/downloads#Google_App_Engine_SDK_for_Go).
 And copy appengine, appengine_internal and goprotobuf as followings :
 
-    $cp -r $GAEROOT/goroot/src/pkg/appengine $GOROOT/src/pkg/
-    $cp -r $GAEROOT/goroot/src/pkg/appengine_internal $GOROOT/src/pkg/
-    $cp -r $GAEROOT/goroot/src/pkg/code.google.com/p/goprotobuf $GOROOT/src/pkg/code.google.com/p/
-
-In addition set environment variables :
-
-    export PATH=$PATH:$GAEROOT 
-    export APPENGINE_SDK=$GAEROT
+    curl https://raw.github.com/tenntenn/gae-go-testing/master/setup.py | python
 
 This library can be installed as following :
 

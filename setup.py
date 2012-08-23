@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # _*_ coding: utf-8 _*_
 
+# This script copy packages which is necessary for this library to go distribusion.
+# Please run this script before installation such as:
+#   curl https://raw.github.com/tenntenn/gae-go-testing/master/setup.py | python 
+
 import os
 import sys
 import re
