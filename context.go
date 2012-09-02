@@ -72,8 +72,8 @@ func (c *Context) Warningf(format string, args ...interface{})  { c.logf("WARNIN
 func (c *Context) Errorf(format string, args ...interface{})    { c.logf("ERROR", format, args...) }
 func (c *Context) Criticalf(format string, args ...interface{}) { c.logf("CRITICAL", format, args...) }
 
-func (c *Context) Call(service, method string, in, out interface{}, opts *appengine_internal.CallOptions) error {
-	data, err := proto.Marshal(in.(proto.Message))
+func (c *Context) Call(service, method string, in, out proto.Message, opts *appengine_internal.CallOptions) error {
+	data, err := proto.Marshal(in)
 	if err != nil {
 		return err
 	}
@@ -92,7 +92,7 @@ func (c *Context) Call(service, method string, in, out interface{}, opts *appeng
 	if err != nil {
 		return err
 	}
-	return proto.Unmarshal(pbytes, out.(proto.Message))
+	return proto.Unmarshal(pbytes, out)
 }
 
 func (c *Context) FullyQualifiedAppID() string {
