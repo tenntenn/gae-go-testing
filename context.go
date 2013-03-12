@@ -212,6 +212,7 @@ func (c *Context) startChild() error {
 	c.child = exec.Command(
 		devAppserver,
 		"--clear_datastore",
+		"--high_replication",
 		// --blobstore_path=... <tempdir>
 		// --datastore_path=DS_FILE
 		"--skip_sdk_update_check",
